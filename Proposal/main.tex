@@ -1,0 +1,123 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[margin=0.5in]{geometry}
+\title{Prediction of Conductive Ear Conditions\\
+\large Project Proposal}
+\date{}
+
+\begin{document}
+\maketitle
+
+\begin{tabbing}
+\bf Members: \=\kill
+\bf Client: \> Dr Robyn Choi\\
+
+\bf Team: \> Team Fruitbat\\
+\> \\
+\bf Members: \> Parsa Amid (22225748)\\
+\> Jiaru Chen (22850907)\\
+\> Chuanhe Liu (22995558)\\
+\> Prince David Rajendran (22902429)\\
+\> Zen Geng (23110032) \\
+\> Daniel Hess (21971897) \\
+\end{tabbing}
+
+\section*{Background and Aim}
+Otitis media, also known as middle ear infection, is a common condition among children with four out of five children experiencing it at least once by early school age \cite{rch}. Early childhood hearing conditions are often linked to learning difficulties at school, causing lasting effects throughout their lives. Early diagnosis of the ear conditions is critical to their future development but has been limited by the traditional equipment and methods. The challenge is that the traditional diagnosis of otitis media can be highly subjective as it is generally based on appearance of the tympanic membrane, medical history, and other symptoms \cite{mja}.\\
+
+A common method of diagnosis is the use of tympanometry, a tool that measures acoustic admittance changes in the middle ear system due to the variation of pressure in the external ear canal \cite{margolis}. This method conventionally uses a single low frequency of 220 or 226Hz probe tones \cite{grais}. Technological advancement in this space has enabled frequencies to be expanded from a single probe tone to multiple frequency measurements (MFT). A MFT device using Wideband Absorbance Immittance (WAI), which utilises a wide frequency range of 0.25 to 8.0kHz, has been developed recently \cite{grais}. Advantages of using WAI compared to traditional tympanometry include improved efficiency and accuracy in the diagnosis of certain types of middle ear disorders \cite{grais}. Despite the benefits, there is limited adoption of WAI technology in daily clinical practice due to the lack of understanding, the difficulty in interpretation of WAI results, and the impracticality of use in a busy audiological practice. Currently, receiver operating characteristic techniques have been applied to the data, as well as reliance on clinicians to interpret the complex graph produced by the device. \\
+
+The aim of this project is to utilise machine learning to assist in streamlining the WBA interpretation process and aid clinicians in making clinical decisions by automatically diagnosing ears as normal or with conductive conditions, improve diagnosis accuracy and ultimately improving the patient experience.  \\
+
+Advancements in the field of Data Science have made applying machine learning techniques to various applications more accessible and enabled faster and more accurate processing of large amounts of data. These algorithms can be utilized to assist doctors in diagnosis of ear conditions by providing insights into the data produced in the diagnosis. Such algorithms will not only improve the accuracy of the tests but will help in reducing the training time required to interpret device outputs and complex visualisations which will potentially enable the tests to be performed by non-trained volunteers, increasing the accessibility for the diagnosis. \\
+
+Wideband Absorbance (WBA) data collected by Dr Robyn Choi contains information on 120 left ears and 119 right ears from children over a frequency of 250Hz to 8000Hz. The data also captures information on the subject such as age, gender, ethnicity, and education as well as audiometric information such as hearing threshold data (Pure Tone Audiometry or PTA), middle ear data (tympanometry or TTP), and objective test of hearing data (otoacoustic emission or OAE). PTA, TTP and OAE are the three golden rules used to determine whether a subject has normal ears, failure of any of these tests indicates that the subject has ear conditions.  
+
+\section*{Deliverables and Timeline}
+The current method for capturing the WBA data can be done in the field  with the assistance of a laptop meaning that it can be performed mobile. However currently the analysis and decision making process is time consuming and is often done at a later stage. With the presence of a laptop for the data gathering process, if the analysis can be done automatically and quickly then the technician can make a decision on the spot regarding the results.\\
+
+What we aim to deliver is a framework for better understanding the WBA data produced by the handheld tympanometer, which will allow audiologist to gather insights from the data and streamline the diagnosis process. This involves the development of a powerful enough model to perform the analysis. This also will involve a program with the following embedded functionalities: 
+
+\begin{itemize}
+\item An input for the user to provide WBA data 
+\item Automatic data processing using the models explored in the project 
+\item Simplified output for data driven decision making 
+\end{itemize}
+
+This will be accompanied by a report outlining the data processing, model building, and a user guide for the use of the program. Depending on the model, it may be possible to completely explain the model process in which case we will include a model explaination.
+
+
+\section*{Methods}
+
+In the data there are a few areas we need to look at. With respect to the WBA data there are a few points with value zero, we have been informed that these are instances where the machine returned nonsensical values (equating to negative absorbance). While the values may not make sense to us, these errors may have some correlation with the occurrence of ear issues and as such our performance may be dependent on how we end up dealing with them; keeping these as they are, omitting them or otherwise. Secondly, we have been informed by the client that it is possible there exists a correlation between ethnicity and the problems that occur – however given the data there are many different ethnicities that have very few samples this may be difficult to implement without risk of overfitting. Similarly, our expectation is that language is highly correlated with ethnicity so it may become necessary to include that in how we perform our analysis. \\
+
+Finally, it may be important to look at the factors and differences that affect people of different genders as well as which ear side is being tested. \\
+
+It is well documented that machine learning scales well with increased amounts of data, however in this case we are quite limited. In addition to the amount of data, there is a large class imbalance (approx. 15\%/85\% relative class size) as well as a decent number of features we are looking to fit. All these factors contribute to an especially key point regarding the models we can use: avoid overfitting. Luckily, we have several ways we can deal with overfitting depending on the type of model we want to build.  \\
+
+The first and easiest way is to just fit simpler models. While less glamorous, a logistic regression model or linear kernel SVM could end up outperforming more powerful models due to less chance of overfitting.
+
+ Secondly, there are several regularization options for more powerful models such as lasso, dropout, elastic-net or pruning.  \\
+
+Finally, we can use dimensionality reduction or feature extraction techniques. We can use PCA and Auto-Encoders as methods of dimensionality reduction, where one finds maximum variance across our feature space and the other finds a less explainable lower dimension representation. By reducing the number of dimensions, we can avoid overfitting and superfluous data. We can also use something like ICA to remove the correlations between our features. \\
+
+Relating to our goal of building some sort of application to perform the analysis automatically, we need to be mindful of the requirements for running these models. For us, due to the fact our model cannot be overly complex because of limited data. \\
+
+We will be using normal metrics to evaluate the performance of the models. Accuracy is a common metric that gives us a good example of the total performance of a model, however because of our large class imbalance and the nature of the problem, error types are important to us. Sensitivity (recall) and specificity (precision) for that matter are much more powerful metrics that we can use to evaluate the performance of a model. Comparison against baseline metrics (null, bayes etc.) will give us a good look into how well our models perform. Finally, because of the limited number of samples, we need to be careful with how we use training data and how we split between training and validation/test sets. For this reason, it will be important to compare models on cross-validation scores as opposed to single train-test statistics. \\
+
+While our goal is to take away the necessity for individuals to be trained to make an analysis, explainability is not super crucial. The requirements for the device to be connected to a laptop mean that while the device is operational, our software should also be operational. The dependance on this device is a non-issue as it is the reason for this project. Where explainability becomes important is where we have access to the data but no computer to run the software – while unlikely – is still a use case we should consider. That is why as part of our model selection criteria we will include the explainability component, we will not be just reliant on a single model but will be looking at different models and the use cases that they provide. 
+
+
+\section*{Project Management timeline and Costs}
+The project has been divided into 3 primary tasks, consisting of: 1) Data processing and dimensionality reduction 2) Exploratory data analysis (EDA) 3) Model building. The division of tasks is based on individual members’ skill sets and preference. For ensuring more effective collaboration, for the two tasks of EDA and model building which occur in parallel from weeks 4 to 7, the group will divide into two sub-groups of 3. The task timelines are outlined in the Gantt chart attached in the appendix. 
+\section*{APPENDIX}
+\subsection*{Self Reflection}
+\subsubsection*{Parsa Amid}
+\subsubsection*{Jiaru Chen}
+I have personally contributed to several tasks, both collaboratively and individually, to ensure objectives and timeframes were met. In addition, I also self-studied machine learning fundamentals as I have not yet taken the unit. 
+
+ 
+
+ The first task was research to ensure understanding of key technical aspects of the topic (conductive ear conditions). As part of this, I took the initiative to draft a skeleton proposal for the team’s feedback and input. In terms of client engagement, I assisted with preparing clarification questions to ensure clarity of the task and understand how we can provide value to the client. Additionally, I revised the background section of our proposal based on client feedback improving the accuracy and flow of document, and ensuring the content is fit for purpose. 
+
+ 
+
+From a data processing perspective, I supported with data cleansing to ensure missing or anomalous data was rectified to improve data quality and further processing for our team. In addition to this, I performed exploratory data analysis and visualisation to easily identify patterns and trends by creating subsets, restructuring data, and applying different graphical tools such as 3D charts, box plots and bar charts to present preliminary data insights to the team. 
+
+ 
+
+Once the feature selection has been finalised, I will utilize statistical tools again to explore and visualize the correlations and functional relationships between the selected features. The inputs and insights from this work will inform how the model is built. 
+
+ 
+
+In the following weeks, I will also process other different feature selection methods. These methods include drop-in deviance and log-likelihood to select features for training a decision tree and logistic regression model. As the purpose of the model is to predict ear condition, which focuses on true positive rate, I will put more emphasis on sensitivity over other accuracy measures as a performance measure when comparing models. In addition, I will complete more tutorials and practice to become more familiar with python and sklearn package to ensure coding script is consistent, as python is the main platform utilised by the team. 
+\subsubsection*{Chuanhe Liu}
+This project’s aim is to build a model to improve the efficiency and accuracy of diagnosis of ears with conductive conditions, which needs whole EDA process in data science. Our group members all worked very hard those weeks, and we have already made some important progresses. 
+
+ 
+
+In first two weeks, I read a lot of related materials about WBA data and offered some views about how we should finish this project in our group meetings. After first meeting with our client Robyn, we started to do data exploration from week3 to week5, which we have already found some attractive findings. In data exploration process, I offered some methods and ideas to clean data and I convert all numerical data into categorical data based on confidence intervals for some algorithms’ requirement. 
+
+ 
+
+According to the outcomes of the data visualization, we found that it is very difficult to distinguish the effects of different Frequency data contributing to the response. Therefore, I am going to do pattern mining which can give us some insights and suggestions to do next step. For pattern mining, I plan to use 2-3 days to read materials about how to refine some algorithms, like improving Apriori, and generate a first version model of pattern mining. At the same time, I will take charge of feature selection with Daniel. Feature selection is extremely important for models building, which can improve model performance a lot. I will try some classic algorithms such as C4.5, GINI index from week4 to week5, which I will also read some articles about them and offer those feature selection algorithms codes in the end of week5. 
+
+ 
+
+When the preparations for data are done and feature selection are completed, our group will build models for classification. In this stage, I will build one or two models for classification based on some feature selection methods. For example, if C4.5 or GINI index runs well, I will build a decision tree model to classify, and I plan to build it and upload the work in Github in the end of study break. 
+
+ 
+
+After all group members’ work done, we will integrate all the efforts in the beginning of week 8 or week 9 and send to our clients to look for the feedback, then make some improvement and finish this project report together.  
+\subsubsection*{Prince David Rajendran}
+\subsubsection*{Zen Geng}
+In the unit CITS5553, I was assigned to a project, Predicting Conductive Ear Condition, where I met my kind and reliable teammates. Although I entered this group after the third week, still I felt the strong action force and a good communication atmosphere from my colleagues. Our main task is to identify the conductive ear for children with WBA diagnostic result at different frequencies based on machine learning algorithm and models. My task first was to build model. With some simple models such as SVM and Decision Tree, we obtained quite high accuracy above 79\%. However, as the exploration data analysis and meeting with the client processed, we noticed that the dataset is very imbalanced and the previous simple model showed extremely low sensitivity, while the client required high sensitivity. Under this circumstance, data augmentation and sampling should be first considered to deal with the imbalanced dataset. Apart from these methods, I expect that data transformation could give good performance. Noticing that the frequency-domain WBA data could be possibly extended to time domain through inverse Fourier transformation, I applied IFT to the WBA at different frequency and transform it into a “pseudo time domain”. Unfortunately, this method didn’t show a significant result compared with the original WBA data. According my understanding, IFT is actually a linear transformation and didn’t give extra new data information. Thus, the feature space of the dataset is probably not linear separable and we should come up with other nonlinear methods to transform and map the data. With this reflection, manifold learning is considerable for complex feature space such as T-SNE and LLE algorithm. Besides, interpretability is another important topic and hence complex neural network model is not recommended for this project. However, some simple interpretable ANN architecture like under-complete autoencoder can be possibly applied to perform feature extraction and dimension reduction. Finally, many features like sex, race and age are not considered in the models while these features are possibly very significant factors. Therefore, these factors are worthy considering and we should do more research on the dataset itself. Consequently, our next work will mainly focus on data augmentation and feature extraction for future modelling.  
+\subsubsection*{Daniel Hess}
+The first few weeks have been focused on problem analysis and data exploration. As per Robyn’s opinion I have tried finding ways of including the ethnicity data (since there is such a large imbalance) through grouping and encoding. It remains to be seen whether this data will be important or not in our tests so far. As far as visualization of the data goes, I have been looking at manifold learning techniques (such as TSNE and LLE) to better view the data distribution – some of which show partially distinct regions between the classes. This is an avenue that should be explored further. 
+
+I have also done some preliminary modelling to look at the prevalence of overfitting across some of the models we want to fit. A big issue we expect to exist in this project is overfitting due to the number of samples and significant difference in class sizes. While the plan is to avoid fitting models that are too complex, depending on the regularization parameters we may be able to do so without overfitting. I think a model that would be great in this use case would be a decision tree, a logical next step from there would be to consider a random forest. However, in my testing so far, I have found that post training pruning, the random forest often performs identically to decision tree models. I have looked at SVMs and linear models as well with varying degrees of success. A big issue I have been having is re-running models with the same parameters often returns wildly different results (the degree of which is model dependent) even while using cross-validation techniques. 
+
+I will be spending my time looking at feature extraction/selection as well as dimensionality reduction techniques. I would like to look at using an autoencoder as a method of dimensionality reduction and early testing has shown that it can perform well with minimal risk of overfitting. I would also like to look at PCA and ICA. I have been thinking about what features we can extract from the data, and because we can look at each of the different absorbance values as a continuous function from frequency, I think it might be possible to fit a polynomial to the data and use the coefficients as features. 
+
+\bibliographystyle{acm}
+\bibliography{refs}
+\end{document}
